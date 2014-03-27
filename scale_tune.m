@@ -17,15 +17,26 @@ function [sopt,vopt]= sigma_tune(x,s0)
 % David C\'ardenas Pe\~na
 % $Id: sigma_tune.m 2014-02-22 22:40:00 $
 
+if nargin == 1
+  s0 = median(x(:));
+end
+
 x = x(:);
 f = @(s)obj_fun(s,x);
 [sopt, vopt] = fminsearch(f,s0);
+lb = 1e-3;
+ub = 1e16;
+%[sopt, vopt] = fmincon(f,s0,[],[],[],[],lb,[]);
 vopt = -vopt;
 
 %%%%% objective function %%%%%%%%%%%
 function [v,dv] = obj_fun(s,x)
-
-y = exp(-x(:).^2/(2*s^2));
+%nx = size(x,1);
+%H = eye(size(x)) - (1/nx)*ones(nx,1)*ones(1,nx);
+y = exp(-x.^2/(2*s^2));
+%y = reshape(y,nx,nx);
+%y = H*y*H;
+y = y(:);
 v = -var(y);
 if nargout > 1
   n = numel(y);
@@ -40,4 +51,3 @@ if nargout > 1
 %     tmp = squareform(pdist(x(:)).^2);
 %     dv = -sum(tmp(:))/(2*numel(tmp));
 end
-
