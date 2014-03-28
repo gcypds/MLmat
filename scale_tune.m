@@ -24,9 +24,6 @@ end
 x = x(:);
 f = @(s)obj_fun(s,x);
 [sopt, vopt] = fminsearch(f,s0);
-lb = 1e-3;
-ub = 1e16;
-%[sopt, vopt] = fmincon(f,s0,[],[],[],[],lb,[]);
 vopt = -vopt;
 
 %%%%% objective function %%%%%%%%%%%
