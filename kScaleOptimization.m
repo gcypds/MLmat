@@ -1,7 +1,7 @@
-function [sopt,vopt]= sigma_tune(x,s0)
+function [sopt,vopt]= kScaleOptimization(x,s0)
 % Automatic tuning of the scale parameter for the exponentiated quadratic
 % kernel: y = exp(d.^2/(2*s^2))
-% FORMAT [sigma, value] = sigma_tune(d,s0)
+% FORMAT [sigma, value] = kScaleOptimization(d,s0)
 % d     - data points, usually: d = pdist(x);
 % s0    - starting point for the search
 % sigma - achieved optimum value
@@ -24,9 +24,6 @@ end
 x = x(:);
 f = @(s)obj_fun(s,x);
 [sopt, vopt] = fminsearch(f,s0);
-lb = 1e-3;
-ub = 1e16;
-%[sopt, vopt] = fmincon(f,s0,[],[],[],[],lb,[]);
 vopt = -vopt;
 
 %%%%% objective function %%%%%%%%%%%
