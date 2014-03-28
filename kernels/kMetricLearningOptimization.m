@@ -10,7 +10,6 @@ function [eopt,vopt]= kMetricLearningOptimization(k,l,e0)
 % value - objective function value at eopt
 %__________________________________________________________________________
 % Copyright (C) 2014 Signal Processing and Recognition Group
-
 % David C\'ardenas Pe\~na
 % $Id: kMetricLearningOptimization.m 2014-03-27 21:49:00 $
 

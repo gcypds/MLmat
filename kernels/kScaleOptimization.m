@@ -28,11 +28,10 @@ vopt = -vopt;
 
 %%%%% objective function %%%%%%%%%%%
 function [v,dv] = obj_fun(s,x)
-%nx = size(x,1);
-%H = eye(size(x)) - (1/nx)*ones(nx,1)*ones(1,nx);
-y = exp(-x.^2/(2*s^2));
-%y = reshape(y,nx,nx);
-%y = H*y*H;
+
+%Exponentiated quadratic function
+y = exp(-x.^2/(2*s^2)); 
+
 y = y(:);
 v = -var(y);
 if nargout > 1
