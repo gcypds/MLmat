@@ -4,6 +4,9 @@ function [A,K] = kITLMetricLearningMahalanobis_fast(X,L,...
 % Function basics
 %Sanchez et. al. Information theoretic learning with infitely divisible kernels
 %Cardenas & Alvarez  Sigma tune Gaussian kernel with information potential
+% USAGE:
+% [A,K] = kITLMetricLearningMahalanobis_fast(X,L,...
+%    alpha,etav,plot_it,A_i,labels)
 % Inputs:
 %X \in R^{N x P} : high dimensional data matrix, N: samples; p:features
 %L \in R^{N x N} : high-dimensional kernel
@@ -94,7 +97,7 @@ if plot_it
     xlabel('iteration')
     ylabel('Centered alignment')
     hold on
-    showfigs_c(2);
+    %showfigs_c(2);
 end
 %%
 for ii=1:maxiter
@@ -120,7 +123,7 @@ for ii=1:maxiter
         figure(2)
         clf
         subplot(2,2,4)
-        scatter(Y(:,1),Y(:,2),20,labels,'filled');
+        %scatter(Y(:,1),Y(:,2),20,labels,'filled');
         axis off
         title('Y')
         subplot(2,2,3)
