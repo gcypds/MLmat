@@ -1,11 +1,14 @@
-function [sopt,vopt]= kScaleOptimization(x,s0)
+function [sopt,vopt]= kScaleOptimization(x,s0,obj_func,param)
 % Automatic tuning of the scale parameter for the exponentiated quadratic
 % kernel: y = exp(d.^2/(2*s^2))
-% FORMAT [sigma, value] = kScaleOptimization(d,s0)
-% d     - data points, usually: d = pdist(x);
-% s0    - starting point for the search
-% sigma - achieved optimum value
-% value - objective function value at sigma
+% FORMAT [sigma, value] = kScaleOptimization_info(X,s0,obj_func,param)
+% X        - feature matrix (N x P);
+% s0       - starting point for the search
+% obj_func - cost function: 'info' (default). 'var'. More options soon
+% param    - if 'info' as obj_func, param is used as the alpha term in the
+%            generalized Renyi's entropy function, default=2.
+% sigma    - achieved optimum value
+% value    - objective function value at sigma
 % 
 % The tuning method used here is based on the maximization of the
 % transformed data variance as a function of the scale parameter, since
@@ -15,35 +18,45 @@ function [sopt,vopt]= kScaleOptimization(x,s0)
 % Copyright (C) 2014 Signal Processing and Recognition Group
 
 % David C\'ardenas Pe\~na
-% $Id: sigma_tune.m 2014-02-22 22:40:00 $
+% Andres Marino Alvarez Meza
+% $Id: kScaleOptimization.m 2014-02-22 22:40:00 $
+
+x = pdist2(x,x);
 
 if nargin == 1
   s0 = median(x(:));
 end
 
-x = x(:);
-f = @(s)obj_fun(s,x);
-[sopt, vopt] = fminsearch(f,s0);
-vopt = -vopt;
-
-%%%%% objective function %%%%%%%%%%%
-function [v,dv] = obj_fun(s,x)
-
-%Exponentiated quadratic function
-y = exp(-x.^2/(2*s^2)); 
-
-y = y(:);
-v = -var(y);
-if nargout > 1
-  n = numel(y);
-  xy  = x.*y;
-  dxy = zeros(n);
-  dy  = zeros(n);
-  for i=1:numel(y)
-    dxy(:,i) = xy - xy(i);
-    dy(:,i)  = y - y(i);
-  end
-  dv = sum(sum(s^(-3)*dxy.*dy))/(n^2);  
-%     tmp = squareform(pdist(x(:)).^2);
-%     dv = -sum(tmp(:))/(2*numel(tmp));
+func = 'info';
+if nargin>2
+  func = lower(obj_func);
 end
+
+if strcmp(func,'info')
+  if nargin>3
+    alpha = param;
+  else
+    alpha = 2;
+  end
+  f = @(s)info_obj_fun(s,x,alpha);
+elseif strcmp(func,'var')
+  f = @(s)var_obj_fun(s,x);
+else
+  error('unknown cost function')
+end
+[sopt, vopt] = fminsearch(f,s0);
+
+
+%%%%% information-based objective function %%%%%%%%%%%
+function [v] = info_obj_fun(s,x,alpha)
+
+k = exp(-x.^2/(2*s^2));
+vi = mean(k,1).^(alpha-1);
+v = - var(vi);
+
+%%%%% variance-based objective function %%%%%%%%%%%
+function [v] = var_obj_fun(s,x)
+
+k = exp(-x.^2/(2*s^2)); 
+k = k(:);
+v = -var(k);

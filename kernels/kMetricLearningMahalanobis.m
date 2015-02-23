@@ -26,7 +26,7 @@ tol = 1e-5;
 %etav = [5e-3 5e-3];
     
 %% optimization
-sopt = kScaleOptimization_info(pdist(X*A_i));
+sopt = kScaleOptimization(X*A_i);
 A = A_i/(sqrt(2)*sopt);
 s0 = 1/(2*sopt^2);
 u_i = log(s0)/log(10);
@@ -119,6 +119,8 @@ for ii = 1 : maxiter
     
 end
 A=real(reshape(vecAs(1:end-1),size(X,2),[]));
+sp = kScaleOptimization(X*A);
+A = A./(sqrt(2)*sp);
 s = vecAs(end);
 s = 10^s;
 
@@ -134,12 +136,11 @@ function [f, gradf,k,y,rho]= A_derivativeAs(vecas,x,n,l,h)
 a=real(reshape(vecas(1:end-1),size(x,2),[]));
 u = vecas(end);
 s = 10^u;
-sp = kScaleOptimization_info(pdist(x*a));
+sp = kScaleOptimization(x*a);
 a = a/(sqrt(2)*sp);
 y=x*a;
 d=pdist2(y,y);
 k=exp(-d.^2/2);
-
 
 if any(isnan(k(:)))% ||any(isnan(k_ly(:)))
     fprintf('whoa')

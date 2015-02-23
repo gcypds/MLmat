@@ -10,5 +10,5 @@ for p=1:P
   K1(:,:,p)=H*k(:,:,p)*H;
   a(p)=trace(K1(:,:,p)*L1');
 end
-M=ComputeM(K1);
+M=mklComputeM(K1);
 u=(M\a')./norm(M\a');
