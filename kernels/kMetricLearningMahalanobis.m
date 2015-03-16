@@ -1,4 +1,4 @@
-function [A,s] = kMetricLearningMahalanobis(X,L,labels,Q,plot_it,etav)
+function [A,s,K] = kMetricLearningMahalanobis(X,L,labels,Q,plot_it,etav)
 % metric learning - mahalanobis distance
 % Function basics
 %Brockmeier et. al. Neural Decoding with kernel-based metric learning

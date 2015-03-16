@@ -1,8 +1,9 @@
-function [sopt,vopt]= kScaleOptimization(x,s0,obj_func,param)
+function [sopt,vopt]= kScaleOptimization(x,y,s0,obj_func,param)
 % Automatic tuning of the scale parameter for the exponentiated quadratic
 % kernel: y = exp(d.^2/(2*s^2))
-% FORMAT [sigma, value] = kScaleOptimization_info(X,s0,obj_func,param)
+% FORMAT [sigma, value] = kScaleOptimization(X,Y,s0,obj_func,param)
 % X        - feature matrix (N x P);
+% Y        - feature matrix (M x P);
 % s0       - starting point for the search
 % obj_func - cost function: 'info' (default). 'var'. More options soon
 % param    - if 'info' as obj_func, param is used as the alpha term in the
@@ -21,19 +22,23 @@ function [sopt,vopt]= kScaleOptimization(x,s0,obj_func,param)
 % Andres Marino Alvarez Meza
 % $Id: kScaleOptimization.m 2014-02-22 22:40:00 $
 
-x = pdist2(x,x);
+if numel(y)>0
+  x = pdist2(x,y);
+else
+  x = pdist2(x,x);
+end
 
-if nargin == 1
+if nargin <= 2
   s0 = median(x(:));
 end
 
 func = 'info';
-if nargin>2
+if nargin>3
   func = lower(obj_func);
 end
 
 if strcmp(func,'info')
-  if nargin>3
+  if nargin>4
     alpha = param;
   else
     alpha = 2;
