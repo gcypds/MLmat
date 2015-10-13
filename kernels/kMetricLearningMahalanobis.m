@@ -1,4 +1,4 @@
-function [A,s,K] = kMetricLearningMahalanobis(X,L,labels,Q,plot_it,etav)
+function [A,s,K,fnew] = kMetricLearningMahalanobis(X,L,labels,Q,plot_it,print_it,etav)
 % metric learning - mahalanobis distance
 % Function basics
 %Brockmeier et. al. Neural Decoding with kernel-based metric learning
@@ -76,11 +76,12 @@ for ii = 1 : maxiter
     gold = gradf;
     vecAs = vecAs - eta*gradf;
     df = abs(fold-fnew);
-    
-  
-        fprintf('%d-%d -- eta = %.2e -- diff_f = %.2e - f = %.2e\n',...
-            ii,maxiter,eta,df,fold)
-     if plot_it   
+      
+    if print_it
+       fprintf('%d-%d -- eta = %.2e -- diff_f = %.2e - f = %.2e\n',...
+                ii,maxiter,eta,df,fold)
+    end
+    if plot_it
         figure(1)
         scatter(ii,fnew,20,'r','filled')
         
@@ -91,7 +92,7 @@ for ii = 1 : maxiter
         figure(2)
         clf
         subplot(2,2,4)
-        %scatter(Y(:,1),Y(:,2),20,labels,'filled');
+        scatter3(Y(:,1),Y(:,2),Y(:,3),20,labels,'filled');
         axis off
         title('Y')
         
@@ -113,8 +114,10 @@ for ii = 1 : maxiter
     end
     
     if df < tol
+      if print_it
         fprintf('Metric Learning done...diffi %.2e= \n',df)
-        break;
+      end
+      break;
     end
     
 end

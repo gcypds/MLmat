@@ -22,10 +22,14 @@ function [sopt,vopt]= kScaleOptimization(x,y,s0,obj_func,param)
 % Andres Marino Alvarez Meza
 % $Id: kScaleOptimization.m 2014-02-22 22:40:00 $
 
-if numel(y)>0
-  x = pdist2(x,y);
+if nargin>1
+  if numel(y)>0
+    x = pdist2(x,y);
+  else
+    x = pdist2(x,x);
+  end
 else
-  x = pdist2(x,x);
+  x = pdist2(x,x);      
 end
 
 if nargin <= 2

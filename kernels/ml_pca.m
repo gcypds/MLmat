@@ -2,7 +2,7 @@
 %Xp: (nxp)-sized input matrix
 %d: If d>1: Number of output components. If 0<d<1 percentage of kept variance
 
-function [Y, W, Val, Vec]=A_pca(X,d)
+function [Y, W, Val, Vec]=ml_pca(X,d)
 
 
 [n, p]=size(X);
@@ -21,8 +21,12 @@ Val = Val./sum(Val);
 [Val, ival]=sort(Val,'descend');
 Vec = Vec(:,ival);
 
-if d == 0 %eigenvalues larger than the average
-    ivald = Val >= mean(Val);
+if d == 0 %L-curve
+    x = linspace(0,1,numel(Val))';
+    y = Val/max(Val);
+    [~,ind]=min(x.^2 + y.^2);
+    ivald = 1:ind;
+%     ivald = Val >= mean(Val);
     W = Vec(:,ivald);
 
 elseif d > 0 && d < 1
@@ -37,7 +41,7 @@ elseif d > 0 && d < 1
     end
 
 elseif d >=  1
-    W = Vec(:,1:d);
+    W = Vec(:,1:min(d,size(Vec,2)));
 end
 
 if n<p
