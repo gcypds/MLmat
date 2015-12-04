@@ -3,7 +3,7 @@ function options = ckaoptimset(options_in)
 % Creates CKA option structure with fields:
 %   Q \in R^+                 : Output dimension criterion (default = 0). 
 %                               See ml_pca.
-%   showWindows               : If true every 10 iterations the gradient
+%   showWindow               : If true every 10 iterations the gradient
 %                               based results are shown (default = true).
 %   showCommandLine           : If true every 10 iterations the gradient
 %                               based results are printed (default = true).
